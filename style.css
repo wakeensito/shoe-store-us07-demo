@@ -1,0 +1,229 @@
+/* style.css
+   Look: a pale shoebox-paper page, black ink, and each card washed in the
+   colour of the shoe it shows, with the colour's name printed huge behind it.
+   Written phone first; wider screens only get more columns. */
+
+/* ---- Colours and sizes used everywhere ---- */
+:root {
+  --paper: #f6f5f2;        /* page background */
+  --ink: #111111;          /* main text and buttons */
+  --ink-soft: #6b6b6b;     /* labels and supporting text */
+  --hairline: rgba(17, 17, 17, 0.12); /* thin borders */
+  --gap: 16px;             /* base spacing unit */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hides the search label visually but keeps it for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- Header with the search box ---- */
+.site-header {
+  position: sticky; /* stays in view while the grid scrolls */
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap; /* on a phone the search box drops under the logo */
+  align-items: center;
+  gap: 12px var(--gap);
+  padding: 12px var(--gap);
+  background: var(--paper);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.search {
+  flex: 1 1 240px;
+}
+
+.search input {
+  width: 100%;
+  height: 44px; /* big enough to tap comfortably */
+  padding: 0 18px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px; /* 16px stops iOS zooming in on focus */
+}
+
+.search input::placeholder {
+  color: var(--ink-soft);
+}
+
+.search input:focus-visible {
+  outline: 3px solid rgba(17, 17, 17, 0.25);
+  outline-offset: 2px;
+}
+
+/* ---- Main area ---- */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--gap);
+}
+
+.result-count {
+  margin: 0 0 var(--gap);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---- Product grid: one column on phones, more as space allows ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- One product card ---- */
+.card {
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  /* The shoe's colour, mixed thinly into the paper */
+  background: color-mix(in oklab, var(--tint) 14%, var(--paper));
+}
+
+/* Top of the card: the emoji shoe over a glow and a giant colour name */
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 170px;
+  overflow: hidden;
+  background: radial-gradient(
+    60% 70% at 50% 60%,
+    color-mix(in oklab, var(--tint) 45%, transparent),
+    transparent 72%
+  );
+}
+
+.word {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: color-mix(in oklab, var(--tint) 38%, transparent);
+  user-select: none;
+}
+
+.shoe {
+  position: relative; /* sits above the word */
+  font-size: 84px;
+  line-height: 1;
+  filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
+}
+
+/* Bottom of the card: text details */
+.info {
+  padding: var(--gap);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.price {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.swatches,
+.sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Round colour dots */
+.swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--sw);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.22);
+}
+
+/* Round size chips */
+.size {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ---- "No results found" message ---- */
+.no-results {
+  margin: 48px 0;
+  text-align: center;
+  font-size: clamp(28px, 8vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.28);
+}
+
+/* The [hidden] attribute must win over the display rules above */
+[hidden] {
+  display: none !important;
+}

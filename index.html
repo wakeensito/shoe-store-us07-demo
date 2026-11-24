@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Makes the page scale properly on phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solemate | Shoe store demo (US-07)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Acceptance criterion 1: the search box sits in the page header -->
+    <header class="site-header">
+      <a class="logo" href="./">Solemate</a>
+      <form class="search" role="search" onsubmit="return false">
+        <label class="visually-hidden" for="search-box">Search shoes</label>
+        <input
+          id="search-box"
+          type="search"
+          placeholder="Search by name, brand or category"
+          autocomplete="off"
+        />
+      </form>
+    </header>
+
+    <main>
+      <!-- Says how many shoes are showing; screen readers announce changes -->
+      <p id="result-count" class="result-count" aria-live="polite"></p>
+
+      <!-- app.js fills this grid with one card per shoe -->
+      <ul id="product-grid" class="grid"></ul>
+
+      <!-- Acceptance criterion 3: shown only when nothing matches -->
+      <p id="no-results" class="no-results" hidden>No results found</p>
+    </main>
+
+    <!-- type="module" lets app.js import searchProducts from search.js -->
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
