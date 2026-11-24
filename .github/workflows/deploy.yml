@@ -1,0 +1,66 @@
+# Test the search logic, then publish the site to GitHub Pages.
+# If a test fails, the deploy job never starts (user story US-06).
+name: Test and deploy
+
+on:
+  push:
+    branches: [main]   # every push to main
+  workflow_dispatch:    # plus a "Run workflow" button in the Actions tab
+
+# What the workflow's token is allowed to do.
+permissions:
+  contents: read    # read the repository
+  pages: write      # publish to GitHub Pages
+  id-token: write   # prove to Pages that this run is who it says it is
+
+# Let a deployment that has started finish before the next one begins.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # Job 1: run the unit tests.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run the tests
+        run: npm test
+
+  # Job 2: publish the site. "needs: test" means it only runs after the
+  # test job has passed.
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # Copy only the files the site needs, so tests and config stay private
+      # to the repository.
+      - name: Collect the site files
+        run: |
+          mkdir _site
+          cp index.html style.css app.js search.js products.json _site/
+
+      - name: Upload the site files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

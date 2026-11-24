@@ -1,0 +1,10 @@
+{
+  "name": "shoe-store-us07-demo",
+  "version": "1.0.0",
+  "description": "Scrum class demo: shoe search (US-07) with CI/CD on GitHub Actions and GitHub Pages",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
