@@ -75,6 +75,8 @@ async function start() {
     allProducts = await response.json();
     render();
   } catch (error) {
+    // The message lives in the results area, so make sure that area shows.
+    catalog.hidden = false;
     resultCount.textContent = "Could not load the shoes. Please refresh the page.";
     console.error(error);
   }
