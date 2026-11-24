@@ -16,13 +16,13 @@ Acceptance criteria:
 
 ## What the demo shows
 
-The header has a search box that filters the product grid while you type, ignoring upper and lower case. While a search is typed, the large product stage at the top steps aside so the results sit directly under the search box. The 12 shoes in `products.json` are made up. The matching is done by `searchProducts(products, query)` in `search.js`, and `test/search.test.js` tests that function with Node's built-in test runner.
+The page opens on a large product stage. Typing in the header's search box swaps the stage for a grid of the shoes that match, updated on every keystroke and ignoring upper and lower case. Clearing the box brings the stage back. The 12 shoes in `products.json` are made up. The matching is done by `searchProducts(products, query)` in `search.js`, and `test/search.test.js` tests that function with Node's built-in test runner.
 
 The workflow in `.github/workflows/deploy.yml` has two jobs. `test` runs `npm test`. `deploy` needs `test`, so a failing test stops the deployment and a passing run publishes the site to GitHub Pages.
 
 ## The product stage
 
-The stage at the top of the page is the Sneaker Product Hero component, a React component that animates with GSAP. Its source is in `theme/`, unchanged apart from showing the Onyx colourway first. The shoe photos are of one unbranded shoe and were AI-generated for that component's demo; the copies in `images/` are the same photos, used by the grid.
+The stage at the top of the page is the Sneaker Product Hero component, a React component that animates with GSAP. Its source is in `theme/`, unchanged apart from showing the Onyx colourway first. The shoe photos are of one unbranded shoe and were AI-generated for that component's demo; the copies in `images/` are the same photos, used by the search results.
 
 Browsers cannot run the component's TypeScript directly, so it was compiled once, together with React and GSAP, into the single file `hero.js`. That file is committed, which is why the site still needs no build step. To rebuild it after editing `theme/`:
 

@@ -1,5 +1,5 @@
 // app.js
-// Loads the shoes, draws the grid, and redraws it as the shopper types.
+// Loads the shoes and shows the ones that match as the shopper types.
 // The matching itself lives in search.js so it can be tested without a browser.
 // (The big product stage at the top of the page is drawn by hero.js.)
 import { searchProducts } from "./search.js";
@@ -7,6 +7,7 @@ import { searchProducts } from "./search.js";
 // The parts of the page this script works with.
 const searchBox = document.getElementById("search-box");
 const hero = document.getElementById("hero");
+const catalog = document.getElementById("catalog");
 const grid = document.getElementById("product-grid");
 const noResults = document.getElementById("no-results");
 const resultCount = document.getElementById("result-count");
@@ -48,8 +49,16 @@ function cardHtml(product) {
     </li>`;
 }
 
-// Draw the shoes that match whatever is in the search box right now.
+// Show the right thing for whatever is in the search box right now.
 function render() {
+  const searching = searchBox.value.trim() !== "";
+
+  // Nothing typed: show only the product stage. Something typed: the stage
+  // steps aside and the matching shoes take its place.
+  hero.hidden = searching;
+  catalog.hidden = !searching;
+  if (!searching) return;
+
   const matches = searchProducts(allProducts, searchBox.value);
 
   grid.innerHTML = matches.map(cardHtml).join("");
@@ -57,10 +66,6 @@ function render() {
   // Show the "No results found" message only when the list is empty.
   noResults.hidden = matches.length > 0;
   resultCount.textContent = matches.length === 1 ? "1 shoe" : `${matches.length} shoes`;
-
-  // While something is typed, the product stage steps aside so the results
-  // sit right under the search box. It comes back when the box is cleared.
-  hero.hidden = searchBox.value.trim() !== "";
 }
 
 // Fetch the product list, then draw the page for the first time.

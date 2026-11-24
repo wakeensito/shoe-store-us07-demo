@@ -23,15 +23,16 @@
     </header>
 
     <main>
-      <!-- The big product stage. hero.js draws it here. app.js hides it
-           while a search is typed so the results sit on top. -->
+      <!-- The big product stage. hero.js draws it here. app.js swaps it
+           for the search results while something is typed. -->
       <div id="hero"></div>
 
-      <section class="catalog">
+      <!-- Search results. Hidden until something is typed in the search box. -->
+      <section id="catalog" class="catalog" hidden>
         <!-- Says how many shoes are showing; screen readers announce changes -->
         <p id="result-count" class="result-count" aria-live="polite"></p>
 
-        <!-- app.js fills this grid with one card per shoe -->
+        <!-- app.js fills this grid with one card per matching shoe -->
         <ul id="product-grid" class="grid"></ul>
 
         <!-- Acceptance criterion 3: shown only when nothing matches -->
