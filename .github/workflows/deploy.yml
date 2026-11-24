@@ -62,6 +62,12 @@ jobs:
         with:
           path: _site
 
+      # GitHub sometimes needs a few seconds before a fresh upload can be
+      # found. Without this pause the next step occasionally fails with
+      # "No artifacts named github-pages were found".
+      - name: Give the upload a moment to register
+        run: sleep 15
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
