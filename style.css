@@ -1,15 +1,16 @@
 /* style.css
-   Look: a pale shoebox-paper page, black ink, and each card washed in the
-   colour of the shoe it shows, with the colour's name printed huge behind it.
-   Written phone first; wider screens only get more columns. */
+   Styles for the header, the search box and the product grid. The big product
+   stage at the top of the page brings its own styles (it is drawn by hero.js)
+   and only reads the three --color-* values below. */
 
-/* ---- Colours and sizes used everywhere ---- */
+/* ---- Colours used everywhere ---- */
 :root {
-  --paper: #f6f5f2;        /* page background */
-  --ink: #111111;          /* main text and buttons */
-  --ink-soft: #6b6b6b;     /* labels and supporting text */
-  --hairline: rgba(17, 17, 17, 0.12); /* thin borders */
-  --gap: 16px;             /* base spacing unit */
+  --color-background: #0a0a0a;       /* darkest surface, also text on white */
+  --color-foreground: #fafafa;       /* main text, chips and buttons */
+  --color-muted-foreground: #a3a3a3; /* labels and supporting text */
+  --floor: #141414;                  /* page background */
+  --hairline: rgba(250, 250, 250, 0.12); /* thin borders */
+  --gap: 16px;                       /* base spacing unit */
 }
 
 * {
@@ -18,9 +19,9 @@
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--floor);
+  color: var(--color-foreground);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -34,17 +35,24 @@ body {
   white-space: nowrap;
 }
 
-/* ---- Header with the search box ---- */
+/* The [hidden] attribute must win over any display rule below */
+[hidden] {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Header with the search box
+   ========================================================================== */
 .site-header {
-  position: sticky; /* stays in view while the grid scrolls */
+  position: sticky; /* stays in view while the page scrolls */
   top: 0;
-  z-index: 1;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap; /* on a phone the search box drops under the logo */
   align-items: center;
   gap: 12px var(--gap);
   padding: 12px var(--gap);
-  background: var(--paper);
+  background: var(--floor);
   border-bottom: 1px solid var(--hairline);
 }
 
@@ -54,7 +62,7 @@ body {
   letter-spacing: -0.04em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--ink);
+  color: var(--color-foreground);
 }
 
 .search {
@@ -65,28 +73,30 @@ body {
   width: 100%;
   height: 44px; /* big enough to tap comfortably */
   padding: 0 18px;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid rgba(250, 250, 250, 0.28);
   border-radius: 999px;
-  background: #ffffff;
-  color: var(--ink);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font: inherit;
   font-size: 16px; /* 16px stops iOS zooming in on focus */
 }
 
 .search input::placeholder {
-  color: var(--ink-soft);
+  color: var(--color-muted-foreground);
 }
 
 .search input:focus-visible {
-  outline: 3px solid rgba(17, 17, 17, 0.25);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--color-foreground);
 }
 
-/* ---- Main area ---- */
-main {
-  max-width: 1200px;
+/* ==========================================================================
+   The catalogue: result count, grid of cards, "No results found"
+   ========================================================================== */
+.catalog {
+  max-width: 1280px;
   margin: 0 auto;
-  padding: var(--gap);
+  padding: 24px var(--gap) 48px;
 }
 
 .result-count {
@@ -94,136 +104,124 @@ main {
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--color-muted-foreground);
 }
 
-/* ---- Product grid: one column on phones, more as space allows ---- */
+/* One column on a narrow phone, more as space allows */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: var(--gap);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* ---- One product card ---- */
+/* A card echoes the stage: tinted glow, the colour's name, and the shoe */
 .card {
-  overflow: hidden;
+  padding: var(--gap);
   border: 1px solid var(--hairline);
   border-radius: 12px;
-  /* The shoe's colour, mixed thinly into the paper */
-  background: color-mix(in oklab, var(--tint) 14%, var(--paper));
+  background:
+    radial-gradient(70% 45% at 50% 32%, color-mix(in oklab, var(--t) 34%, transparent), transparent 75%),
+    color-mix(in oklab, var(--t) 10%, var(--floor));
 }
 
-/* Top of the card: the emoji shoe over a glow and a giant colour name */
-.stage {
+.card-stage {
   position: relative;
   display: grid;
   place-items: center;
-  height: 170px;
+  height: 150px;
+  margin-bottom: 12px;
   overflow: hidden;
-  background: radial-gradient(
-    60% 70% at 50% 60%,
-    color-mix(in oklab, var(--tint) 45%, transparent),
-    transparent 72%
-  );
 }
-
-.word {
+.card-word {
   position: absolute;
-  top: 4px;
+  top: 0;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 52px;
+  translate: -50% 0;
+  font-size: 54px;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-  white-space: nowrap;
-  color: color-mix(in oklab, var(--tint) 38%, transparent);
-  user-select: none;
+  color: color-mix(in oklab, var(--t) 34%, transparent);
 }
-
-.shoe {
+.card-stage img {
   position: relative; /* sits above the word */
-  font-size: 84px;
-  line-height: 1;
-  filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
+  width: 92%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
 }
 
-/* Bottom of the card: text details */
-.info {
-  padding: var(--gap);
-}
-
-.eyebrow {
+.card-eyebrow {
   margin: 0;
   font-size: 12px;
-  color: var(--ink-soft);
+  color: var(--color-muted-foreground);
 }
-
-.title-row {
+.card-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
   margin-top: 4px;
 }
-
-.name {
+.card-name {
   margin: 0;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
-
-.price {
+.card-price {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-
-.swatches,
-.sizes {
+.card-dots {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
 }
-
-/* Round colour dots */
-.swatch {
-  width: 18px;
-  height: 18px;
+.dot {
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--sw);
-  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(250, 250, 250, 0.28);
 }
 
-/* Round size chips */
-.size {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-/* ---- "No results found" message ---- */
 .no-results {
-  margin: 48px 0;
+  margin: 64px 0;
   text-align: center;
-  font-size: clamp(28px, 8vw, 56px);
+  font-size: clamp(28px, 8vw, 64px);
   font-weight: 800;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-  color: rgba(17, 17, 17, 0.28);
+  color: rgba(250, 250, 250, 0.22);
 }
 
-/* The [hidden] attribute must win over the display rules above */
-[hidden] {
-  display: none !important;
+/* People who ask for less motion get instant changes and a still shoe */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Fitting the product stage under the header
+   ========================================================================== */
+/* The stage normally asks for the full screen height. Take off the header's
+   height so the two fit on one screen together. (!important is needed because
+   the stage sets its height directly on the element.) */
+#hero .snp-root {
+  min-height: calc(100svh - 69px) !important;
+}
+/* On a phone, let the stage be only as tall as its contents. */
+@media (max-width: 760px) {
+  #hero .snp-root {
+    min-height: 0 !important;
+  }
 }

@@ -54,7 +54,8 @@ jobs:
       - name: Collect the site files
         run: |
           mkdir _site
-          cp index.html style.css app.js search.js products.json _site/
+          cp index.html style.css app.js search.js hero.js products.json _site/
+          cp -r images _site/
 
       - name: Upload the site files
         uses: actions/upload-pages-artifact@v5

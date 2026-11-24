@@ -23,17 +23,26 @@
     </header>
 
     <main>
-      <!-- Says how many shoes are showing; screen readers announce changes -->
-      <p id="result-count" class="result-count" aria-live="polite"></p>
+      <!-- The big product stage. hero.js draws it here. app.js hides it
+           while a search is typed so the results sit on top. -->
+      <div id="hero"></div>
 
-      <!-- app.js fills this grid with one card per shoe -->
-      <ul id="product-grid" class="grid"></ul>
+      <section class="catalog">
+        <!-- Says how many shoes are showing; screen readers announce changes -->
+        <p id="result-count" class="result-count" aria-live="polite"></p>
 
-      <!-- Acceptance criterion 3: shown only when nothing matches -->
-      <p id="no-results" class="no-results" hidden>No results found</p>
+        <!-- app.js fills this grid with one card per shoe -->
+        <ul id="product-grid" class="grid"></ul>
+
+        <!-- Acceptance criterion 3: shown only when nothing matches -->
+        <p id="no-results" class="no-results" hidden>No results found</p>
+      </section>
     </main>
 
     <!-- type="module" lets app.js import searchProducts from search.js -->
     <script type="module" src="app.js"></script>
+    <!-- The product stage: the Sneaker Product Hero component from theme/,
+         compiled together with React and GSAP into one file. -->
+    <script type="module" src="hero.js"></script>
   </body>
 </html>

@@ -1,22 +1,22 @@
 // app.js
 // Loads the shoes, draws the grid, and redraws it as the shopper types.
 // The matching itself lives in search.js so it can be tested without a browser.
+// (The big product stage at the top of the page is drawn by hero.js.)
 import { searchProducts } from "./search.js";
 
 // The parts of the page this script works with.
 const searchBox = document.getElementById("search-box");
+const hero = document.getElementById("hero");
 const grid = document.getElementById("product-grid");
 const noResults = document.getElementById("no-results");
 const resultCount = document.getElementById("result-count");
 
-// One emoji per category stands in for a product photo.
-const EMOJI = {
-  Running: "👟",
-  Tennis: "👟",
-  Basketball: "👟",
-  Hiking: "🥾",
-  Casual: "🩴",
-  Dress: "👞",
+// The three colourways there are photos for: a dot colour, a tint for the
+// glow behind the shoe, and the photo itself.
+const COLOURWAYS = {
+  Onyx: { swatch: "#1d1d1f", tint: "#7fd8bd", image: "images/onyx.webp" },
+  Cloud: { swatch: "#e4e4e4", tint: "#ff9f6e", image: "images/cloud.webp" },
+  Cobalt: { swatch: "#2f4fd0", tint: "#5b7cff", image: "images/cobalt.webp" },
 };
 
 // Filled once products.json has loaded.
@@ -24,35 +24,27 @@ let allProducts = [];
 
 // Build the HTML for one product card.
 function cardHtml(product) {
-  const mainColor = product.colors[0];
+  // The card shows the shoe in the first colour on its list.
+  const first = product.colors[0];
+  const way = COLOURWAYS[first];
 
-  const swatches = product.colors
-    .map(
-      (color) =>
-        `<span class="swatch" style="--sw:${color.hex}" title="${color.name}"></span>`
-    )
+  const dots = product.colors
+    .map((name) => `<span class="dot" style="--sw:${COLOURWAYS[name].swatch}" title="${name}"></span>`)
     .join("");
 
-  const sizes = product.sizes
-    .map((size) => `<span class="size">${size}</span>`)
-    .join("");
-
-  // --tint tells the CSS which colour to wash the card in.
+  // --t tells the CSS which colour to light the card in.
   return `
-    <li class="card" style="--tint:${mainColor.hex}">
-      <div class="stage">
-        <span class="word" aria-hidden="true">${mainColor.name}</span>
-        <span class="shoe" aria-hidden="true">${EMOJI[product.category] ?? "👟"}</span>
+    <li class="card" style="--t:${way.tint}">
+      <div class="card-stage">
+        <span class="card-word" aria-hidden="true">${first}</span>
+        <img src="${way.image}" alt="${product.brand} ${product.name} in ${first}" loading="lazy" />
       </div>
-      <div class="info">
-        <p class="eyebrow">${product.brand} · ${product.category}</p>
-        <div class="title-row">
-          <h2 class="name">${product.name}</h2>
-          <span class="price">$${product.price}</span>
-        </div>
-        <div class="swatches" aria-label="Colours">${swatches}</div>
-        <div class="sizes" aria-label="Sizes">${sizes}</div>
+      <p class="card-eyebrow">${product.brand} · ${product.category}</p>
+      <div class="card-row">
+        <h2 class="card-name">${product.name}</h2>
+        <span class="card-price">$${product.price}</span>
       </div>
+      <div class="card-dots" aria-label="Colours">${dots}</div>
     </li>`;
 }
 
@@ -64,8 +56,11 @@ function render() {
 
   // Show the "No results found" message only when the list is empty.
   noResults.hidden = matches.length > 0;
-  resultCount.textContent =
-    matches.length === 1 ? "1 shoe" : `${matches.length} shoes`;
+  resultCount.textContent = matches.length === 1 ? "1 shoe" : `${matches.length} shoes`;
+
+  // While something is typed, the product stage steps aside so the results
+  // sit right under the search box. It comes back when the box is cleared.
+  hero.hidden = searchBox.value.trim() !== "";
 }
 
 // Fetch the product list, then draw the page for the first time.
